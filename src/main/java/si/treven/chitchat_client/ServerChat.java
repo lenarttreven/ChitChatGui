@@ -24,7 +24,7 @@ public class ServerChat {
 				.addParameter("username", sender)
 				.build();
 
-		String message = "{ \"global\" : true, \"recipient\":"+ receiver + " \"text\" :" + content +  "}";
+		String message = "{ \"global\" : false, \"recipient\":"+ receiver + " \"text\" :" + content +  "}";
 
 		String responseBody = Request.Post(uri)
 				.bodyString(message, ContentType.APPLICATION_JSON)

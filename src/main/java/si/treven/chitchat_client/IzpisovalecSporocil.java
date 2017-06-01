@@ -29,16 +29,15 @@ public class IzpisovalecSporocil extends TimerTask {
 	public void run() {
 		try {
 			String sporocilo = ServerChat.recieveMessages(chat.inputVzdevek.getText());
-			chat.addMessage("sporočila", sporocilo);
+			if (sporocilo.length() > 2) {
+				chat.addMessage("sporočila", sporocilo);
+			}
 		} catch (ClientProtocolException e) {
 			logger.error("Uporabnik {} ne more prejeti sporočil", chat.inputVzdevek.getText());
-			e.printStackTrace();
 		} catch (URISyntaxException e) {
 			logger.error("Uporabnik {} ne more prejeti sporočil", chat.inputVzdevek.getText());
-			e.printStackTrace();
 		} catch (IOException e) {
 			logger.error("Uporabnik {} ne more prejeti sporočil", chat.inputVzdevek.getText());
-			e.printStackTrace();
 		}
 		
 		
