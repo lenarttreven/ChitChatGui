@@ -36,6 +36,7 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 	private JTextArea output;
 	public JTextField input;
 	public JTextField inputVzdevek;
+	public JLabel uporabnik;
 
 	public ChitChatGui() {
 		super();
@@ -74,7 +75,8 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		JLabel naslovVzdevek = new JLabel("Vzdevek: ");
 		vzdevek.add(naslovVzdevek);
 		
-		this.inputVzdevek = new JTextField(System.getProperty("user.name"), 15);
+		inputVzdevek = new JTextField( 15);
+		inputVzdevek.addKeyListener(this);
 		vzdevek.add(inputVzdevek);
 		
 		GridBagConstraints vzdevekConstraint = new GridBagConstraints();
@@ -134,17 +136,24 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		odjavaConstraint.weightx = 1.0;
 		odjavaConstraint.gridy = 0;
 		pane.add(odjavaGumb, odjavaConstraint);
-		
-		
-		
-		
+
+
 		addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e){
 				input.requestFocusInWindow();
 			}
 		});
 		
-		
+		JLabel uporabnik = new JLabel(System.getProperty("user.name"));
+		GridBagConstraints uporabnikConstraint = new GridBagConstraints();
+		uporabnikConstraint.gridx = 4;
+		uporabnikConstraint.weightx = 1.0;
+		uporabnikConstraint.gridy = 0;
+		pane.add(uporabnik, uporabnikConstraint);
+
+
+
+
 		
 	}
 
@@ -156,7 +165,11 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		String chat = this.output.getText();
 		this.output.setText(chat + person + ": " + message + "\n");
 	}
-	
+
+	public void dodajUporabnika(String person){
+		this.uporabnik.setText("test");
+	}
+
 	public void actionPerformed(ActionEvent e) {
 	
 	}
@@ -168,7 +181,13 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 				this.addMessage(inputVzdevek.getText(), this.input.getText());
 				this.input.setText("");
 			}
-		}		
+		}
+		else if(e.getSource() == this.inputVzdevek){
+			if (e.getKeyChar() == '\n'){
+				this.dodajUporabnika(this.inputVzdevek.getText());
+				this.inputVzdevek.setText("");
+			}
+		}
 	}
 
 	
