@@ -2,10 +2,10 @@ package si.treven.chitchat_client;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,7 @@ public class IzpisovalecSporocil extends TimerTask {
 		try {
 			String sporocilo = ServerChat.recieveMessages(chat.inputVzdevek.getText());
 			if (sporocilo.length() > 2) {
+
 				chat.addMessage("sporočila", sporocilo);
 			}
 		} catch (ClientProtocolException e) {
@@ -43,4 +44,17 @@ public class IzpisovalecSporocil extends TimerTask {
 		
 	}
 
+	public HashMap<Uporabnik, PoslanoSporocilo> vSeznamSporocil(String neurejenoSporocilo) throws IOException {
+		HashMap<Uporabnik, PoslanoSporocilo> sporocila = new HashMap<Uporabnik, PoslanoSporocilo>();
+		ObjectMapper mapper = new ObjectMapper();
+
+		TypeReference<List<PrejetoSporocilo>> t = new TypeReference<List<PrejetoSporocilo>>() { };
+		List<PrejetoSporocilo> prejetaSporocila = mapper.readValue(neurejenoSporocilo, t);
+
+		for(PrejetoSporocilo sporocilo : prejetaSporocila){
+			sporocila.put(new Uporabnik(sporocilo.getSender(), new Date()), new PoslanoSporocilo(sporocilo.getSender(), sporocilo.getText()));
+		}
+
+		return sporocila;
+	}
 }

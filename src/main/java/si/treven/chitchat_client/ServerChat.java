@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
@@ -19,13 +20,16 @@ public class ServerChat {
 	 * @param content
 	 */
 	public static void sendPrivateMessage(String sender, String receiver, String content) {
+		ObjectMapper mapper = new ObjectMapper();
+
 		URI uri = null;
 		String responseBody = null;
 		try {
 			uri = new URIBuilder("http://chitchat.andrej.com/messages")
                     .addParameter("username", sender)
                     .build();
-			String message = "{ \"global\" : false, \"recipient\":\""+ receiver + "\", \"text\" :\"" + content +  "\"}";
+
+			String message =  mapper.writeValueAsString(new PoslanoSporocilo(receiver, content));
 
 			responseBody = Request.Post(uri)
 					.bodyString(message, ContentType.APPLICATION_JSON)
@@ -48,13 +52,15 @@ public class ServerChat {
 	 * @param content
 	 */
 	public static void sendGlobalMessage(String sender, String content)  {
+		ObjectMapper mapper = new ObjectMapper();
+
 		URI uri = null;
 		String responseBody = "";
 		try {
 			uri = new URIBuilder("http://chitchat.andrej.com/messages")
                     .addParameter("username", sender)
                     .build();
-			String message = "{ \"global\" : true, \"text\" :" + content +  "}";
+			String message = mapper.writeValueAsString(new PoslanoSporocilo(content));
 
 			responseBody = Request.Post(uri)
 					.bodyString(message, ContentType.APPLICATION_JSON)
@@ -136,13 +142,13 @@ public class ServerChat {
 	 * @throws ClientProtocolException
 	 * @throws IOException
 	 */
-	public static void getUsers() throws URISyntaxException, ClientProtocolException, IOException{
+	public static String getUsers() throws URISyntaxException, ClientProtocolException, IOException{
 		URI uri =  new URIBuilder("http://chitchat.andrej.com/users")
 				.build();
 		String responseBody = Request.Get(uri)
 									 .execute()
 									 .returnContent()
 									 .asString();
-		System.out.println(responseBody);
+		return responseBody;
 	}
 }
