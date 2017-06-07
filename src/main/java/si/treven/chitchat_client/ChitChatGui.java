@@ -206,15 +206,9 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 	public void keyTyped(KeyEvent e) {
 		if (e.getSource() == this.input) {
 			if (e.getKeyChar() == '\n') {
-				try {
-					ServerChat.sendPrivateMessage(inputVzdevek.getText(), inputPrejemnik.getText(), input.getText());
-					this.addMessage(inputVzdevek.getText(), this.input.getText());
-					this.input.setText("");
-				} catch (URISyntaxException e1) {
-					logger.error("Uporabnik {} ne more poslati sporočila uporabniku {} ", inputVzdevek.getText(), inputPrejemnik.getText());
-				} catch (IOException e1) {
-					logger.error("Uporabnik {} ne more poslati sporočila uporabniku {} ", inputVzdevek.getText(), inputPrejemnik.getText());
-				}
+				this.addMessage(inputVzdevek.getText(), input.getText());
+				ServerChat.sendPrivateMessage(inputVzdevek.getText(),inputPrejemnik.getText(), input.getText());
+				this.input.setText("");
 			}
 		}
 

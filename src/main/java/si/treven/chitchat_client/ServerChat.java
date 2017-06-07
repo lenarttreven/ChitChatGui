@@ -7,55 +7,71 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServerChat {
+	static final Logger logger = LoggerFactory.getLogger(ServerChat.class);
 
-	
 	/**
 	 * @param sender
 	 * @param receiver
 	 * @param content
-	 * @throws URISyntaxException
-	 * @throws ClientProtocolException
-	 * @throws IOException
 	 */
-	public static void sendPrivateMessage(String sender, String receiver, String content) throws URISyntaxException, ClientProtocolException, IOException {
-		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
-				.addParameter("username", sender)
-				.build();
+	public static void sendPrivateMessage(String sender, String receiver, String content) {
+		URI uri = null;
+		String responseBody = null;
+		try {
+			uri = new URIBuilder("http://chitchat.andrej.com/messages")
+                    .addParameter("username", sender)
+                    .build();
+			String message = "{ \"global\" : false, \"recipient\":\""+ receiver + "\", \"text\" :\"" + content +  "\"}";
 
-		String message = "{ \"global\" : false, \"recipient\":"+ receiver + " \"text\" :" + content +  "}";
+			responseBody = Request.Post(uri)
+					.bodyString(message, ContentType.APPLICATION_JSON)
+					.execute()
+					.returnContent()
+					.asString();
 
-		String responseBody = Request.Post(uri)
-				.bodyString(message, ContentType.APPLICATION_JSON)
-				.execute()
-				.returnContent()
-				.asString();
-
+		} catch (URISyntaxException e) {
+			logger.error("URISyntaxException");
+		} catch (ClientProtocolException e1) {
+			logger.error("ClientProtocolException");
+		} catch (IOException e1) {
+			logger.error("IOException");
+		}
 		System.out.println(responseBody);
 	}
 	
 	/**
 	 * @param sender
 	 * @param content
-	 * @throws URISyntaxException
-	 * @throws ClientProtocolException
-	 * @throws IOException
 	 */
-	public static void sendGlobalMessage(String sender, String content) throws URISyntaxException, ClientProtocolException, IOException {
-		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
-				.addParameter("username", sender)
-				.build();
+	public static void sendGlobalMessage(String sender, String content)  {
+		URI uri = null;
+		String responseBody = "";
+		try {
+			uri = new URIBuilder("http://chitchat.andrej.com/messages")
+                    .addParameter("username", sender)
+                    .build();
+			String message = "{ \"global\" : true, \"text\" :" + content +  "}";
 
-		String message = "{ \"global\" : true, \"text\" :" + content +  "}";
+			responseBody = Request.Post(uri)
+					.bodyString(message, ContentType.APPLICATION_JSON)
+					.execute()
+					.returnContent()
+					.asString();
 
-		String responseBody = Request.Post(uri)
-				.bodyString(message, ContentType.APPLICATION_JSON)
-				.execute()
-				.returnContent()
-				.asString();
+		} catch (URISyntaxException e) {
+			logger.error("URISyntaxException");
+		} catch (ClientProtocolException e) {
+			logger.error("ClientProtocolException");
+		} catch (IOException e) {
+			logger.error("IOException");
+		}
 
 		System.out.println(responseBody);
+
 	}
 	
 	/**
