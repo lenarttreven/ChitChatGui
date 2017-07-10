@@ -35,7 +35,6 @@ public class IzpisovalecSporocil extends TimerTask {
 					for(PrejetoSporocilo sporocilo: sporocila){
 						chat.addMessage(sporocilo.getSender(), sporocilo.getText());
 					}
-					//TODO
 				}
 		} catch (ClientProtocolException e) {
 			logger.error("Uporabnik {} ne more prejeti sporočil, ClientProtocolException", chat.inputVzdevek.getText());
@@ -45,6 +44,11 @@ public class IzpisovalecSporocil extends TimerTask {
 			e.printStackTrace();
 		}
 
+		ArrayList<Uporabnik> seznamUporabnikov = ServerChat.getUsers();
+		chat.newUsers();
+		for(Uporabnik uporabnik: seznamUporabnikov) {
+			chat.addUser(uporabnik.getUsername());
+		}
 
 	}
 

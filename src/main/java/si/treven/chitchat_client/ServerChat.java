@@ -163,7 +163,7 @@ public class ServerChat {
 	/**
 	 * Returns Json string of all registred users.
 	 */
-	public static String getUsers(){
+	public static ArrayList<Uporabnik> getUsers(){
 		URI uri = null;
 		try {
 			uri = new URIBuilder("http://chitchat.andrej.com/users")
@@ -172,7 +172,7 @@ public class ServerChat {
 					.execute()
 					.returnContent()
 					.asString();
-			return responseBody;
+			return vSeznamUporabnikov(responseBody);
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
@@ -182,4 +182,14 @@ public class ServerChat {
 		}
 	return null;
 	}
+
+	public static ArrayList<Uporabnik> vSeznamUporabnikov(String uporabniki) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new ISO8601DateFormat());
+
+        TypeReference<List<Uporabnik>> t = new TypeReference<List<Uporabnik>>() { };
+        ArrayList<Uporabnik> urejeniUporabniki = mapper.readValue(uporabniki, t);
+
+        return urejeniUporabniki;
+    }
 }

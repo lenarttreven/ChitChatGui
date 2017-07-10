@@ -37,7 +37,7 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 	public JTextField input;
 	public JTextField inputVzdevek;
 	public JTextField inputPrejemnik;
-
+	public JTextArea seznamAktivnihUporabnikov;
 
 	public ChitChatGui() {
 		super();
@@ -46,10 +46,12 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		Container pane = this.getContentPane();
 		pane.setLayout(new GridBagLayout());
 
+		//Uvodna vrstica
+
 		GridBagConstraints uvodnaVrsticaPostavitev = new GridBagConstraints();
 		uvodnaVrsticaPostavitev.gridx = 0;
-		uvodnaVrsticaPostavitev.weightx = 0.2;
-		uvodnaVrsticaPostavitev.weighty = 1.0;
+		uvodnaVrsticaPostavitev.weightx = 1.0;
+		uvodnaVrsticaPostavitev.weighty = 0.2;
 		uvodnaVrsticaPostavitev.fill = GridBagConstraints.BOTH;
 		uvodnaVrsticaPostavitev.gridy = 0;
 
@@ -106,17 +108,19 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		uvodnaVrstica.add(odjavaGumb, odjavaConstraint);
 
 
-		GridBagConstraints vsebinaPogovoraPostavitev = new GridBagConstraints();
-		vsebinaPogovoraPostavitev.gridx = 0;
-		vsebinaPogovoraPostavitev.weightx = 0.8;
-		vsebinaPogovoraPostavitev.weighty = 1.0;
-		vsebinaPogovoraPostavitev.fill = GridBagConstraints.BOTH;
-		vsebinaPogovoraPostavitev.gridy = 1;
+		//Vsebina
+
+		GridBagConstraints vsebinaPogovoraConstraint = new GridBagConstraints();
+		vsebinaPogovoraConstraint.gridx = 0;
+		vsebinaPogovoraConstraint.weightx = 0.6;
+		vsebinaPogovoraConstraint.weighty = 0.8;
+		vsebinaPogovoraConstraint.fill = GridBagConstraints.BOTH;
+		vsebinaPogovoraConstraint.gridy = 1;
 
 
 		Container vsebina = new Container();
 		vsebina.setLayout(new GridBagLayout());
-		pane.add(vsebina, vsebinaPogovoraPostavitev);
+		pane.add(vsebina, vsebinaPogovoraConstraint);
 
 
 		output = new JTextArea(20, 40);
@@ -162,6 +166,48 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 
 
 
+		//Aktivni uporabniki
+
+
+		GridBagConstraints aktivniUporabnikiConstraint = new GridBagConstraints();
+		aktivniUporabnikiConstraint.gridx = 1;
+		aktivniUporabnikiConstraint.weightx = 0.4;
+		aktivniUporabnikiConstraint.fill = GridBagConstraints.BOTH;
+		aktivniUporabnikiConstraint.gridy = 0;
+
+
+		Container aktivniUporabniki = new Container();
+		aktivniUporabniki.setLayout(new GridBagLayout());
+		vsebina.add(aktivniUporabniki, aktivniUporabnikiConstraint);
+
+
+		JPanel naslovAktivniUporabniki = new JPanel();
+		naslovAktivniUporabniki.setLayout(new FlowLayout(FlowLayout.LEFT));
+		naslovAktivniUporabniki.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+
+		JLabel napisAktivniUporabniki = new JLabel("Aktivni uporabniki: ");
+		naslovAktivniUporabniki.add(napisAktivniUporabniki);
+
+
+		GridBagConstraints naslovAktivniUporabnikiConstraint = new GridBagConstraints();
+		naslovAktivniUporabnikiConstraint.gridx = 0;
+		naslovAktivniUporabnikiConstraint.weightx = 1.0;
+		naslovAktivniUporabnikiConstraint.fill = GridBagConstraints.BOTH;
+		naslovAktivniUporabnikiConstraint.gridy = 0;
+		aktivniUporabniki.add(naslovAktivniUporabniki, naslovAktivniUporabnikiConstraint);
+
+		seznamAktivnihUporabnikov = new JTextArea(15, 10);
+		output.setEditable(false);
+		GridBagConstraints seznamAktivnihUporabnikovConstraint = new GridBagConstraints();
+		seznamAktivnihUporabnikovConstraint.gridx = 0;
+		seznamAktivnihUporabnikovConstraint.weightx = 1.0;
+		seznamAktivnihUporabnikovConstraint.weighty = 1.0;
+		seznamAktivnihUporabnikovConstraint.fill = GridBagConstraints.BOTH;
+		seznamAktivnihUporabnikovConstraint.gridy = 1;
+		aktivniUporabniki.add(seznamAktivnihUporabnikov, seznamAktivnihUporabnikovConstraint);
+
+
+
 
 
 		addWindowListener(new WindowAdapter() {
@@ -181,6 +227,15 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 	public void addMessage(String person, String message) {
 		String chat = this.output.getText();
 		this.output.setText(chat + person + ": " + message + "\n");
+	}
+
+	public void addUser(String uporabnik){
+		String uporabniki = this.seznamAktivnihUporabnikov.getText();
+		this.seznamAktivnihUporabnikov.setText(uporabniki + uporabnik + "\n");
+	}
+
+	public void newUsers(){
+		this.seznamAktivnihUporabnikov.setText("");
 	}
 
 	public void actionPerformed(ActionEvent e) {
