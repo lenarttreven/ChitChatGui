@@ -80,16 +80,8 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		JButton prijavaGumb = new JButton("Prijavi se");
 		prijavaGumb.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				try {
-					ServerChat.logIn(inputVzdevek.getText());
-					addMessage("ChatServer", "Prijavil si se!");
-				} catch (ClientProtocolException e1) {
-					addMessage("ChatServer", "Ni se ti uspelo prijaviti!");
-				} catch (URISyntaxException e1) {
-					addMessage("ChatServer", "Ni se ti uspelo prijaviti!");
-				} catch (IOException e1) {
-					addMessage("ChatServer", "Ni se ti uspelo prijaviti!");
-				}
+				ServerChat.logIn(inputVzdevek.getText());
+				addMessage("ChatServer", "Prijavil si se!");
 			}
 		});
 
@@ -102,16 +94,8 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		JButton odjavaGumb = new JButton("Odjavi se");
 		odjavaGumb.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				try {
-					ServerChat.logOut(inputVzdevek.getText());
-					addMessage("ChatServer", "Odjavil si se!");
-				} catch (ClientProtocolException e1) {
-					addMessage("ChatServer", "Ni se ti uspelo odjaviti!");
-				} catch (URISyntaxException e1) {
-					addMessage("ChatServer", "Ni se ti uspelo odjaviti!");
-				} catch (IOException e1) {
-					addMessage("ChatServer", "Ni se ti uspelo odjaviti!");
-				}
+				ServerChat.logOut(inputVzdevek.getText());
+				addMessage("ChatServer", "Odjavil si se!");
 			}
 		});
 

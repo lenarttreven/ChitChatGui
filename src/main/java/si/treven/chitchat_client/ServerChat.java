@@ -2,8 +2,12 @@ package si.treven.chitchat_client;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.utils.URIBuilder;
@@ -53,6 +57,7 @@ public class ServerChat {
 	 */
 	public static void sendGlobalMessage(String sender, String content)  {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.setDateFormat(new ISO8601DateFormat());
 
 		URI uri = null;
 		String responseBody = "";
@@ -82,73 +87,99 @@ public class ServerChat {
 	
 	/**
 	 * @param me
-	 * @throws URISyntaxException
-	 * @throws ClientProtocolException
-	 * @throws IOException
 	 */
-	public static String recieveMessages(String me) throws URISyntaxException, ClientProtocolException, IOException{
-		URI uri = new URIBuilder("http://chitchat.andrej.com/messages")
-				.addParameter("username", me)
-				.build();
+	public static ArrayList<PrejetoSporocilo> receiveMessages(String me) throws URISyntaxException, ClientProtocolException, IOException{
 
-		String responseBody = Request.Get(uri)
-				.execute()
-				.returnContent()
-				.asString();
+			URI uri = null;
+			uri = new URIBuilder("http://chitchat.andrej.com/messages")
+                    .addParameter("username", me)
+                    .build();
+			String responseBody = Request.Get(uri)
+					.execute()
+					.returnContent()
+					.asString();
+			return vSeznamSporocil(responseBody);
 
-		return responseBody;
+	}
+
+    public static ArrayList<PrejetoSporocilo> vSeznamSporocil(String neurejenoSporocilo) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setDateFormat(new ISO8601DateFormat());
+
+        TypeReference<List<PrejetoSporocilo>> t = new TypeReference<List<PrejetoSporocilo>>() { };
+        ArrayList<PrejetoSporocilo> prejetaSporocila = mapper.readValue(neurejenoSporocilo, t);
+
+        return prejetaSporocila;
+    }
+	
+	/**
+	 * @param username
+	 */
+	public static void logIn(String username) {
+		URI uri = null;
+		try {
+			uri = new URIBuilder("http://chitchat.andrej.com/users")
+                      .addParameter("username", username)
+                      .build();
+			String responseBody = Request.Post(uri)
+					.execute()
+					.returnContent()
+					.asString();
+
+			System.out.println(responseBody);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * @param username
-	 * @throws URISyntaxException
-	 * @throws ClientProtocolException
-	 * @throws IOException
 	 */
-	public static void logIn(String username) throws URISyntaxException, ClientProtocolException, IOException{
-		URI uri = new URIBuilder("http://chitchat.andrej.com/users")
-		          .addParameter("username", username)
-		          .build();
+	public static void logOut(String username){
+		URI uri = null;
+		try {
+			uri = new URIBuilder("http://chitchat.andrej.com/users")
+                      .addParameter("username", username)
+                      .build();
+			String responseBody = Request.Delete(uri)
+					.execute()
+					.returnContent()
+					.asString();
 
-		  String responseBody = Request.Post(uri)
-		                               .execute()
-		                               .returnContent()
-		                               .asString();
-
-		  System.out.println(responseBody);
+			System.out.println(responseBody);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
-	 * @param username
-	 * @throws URISyntaxException
-	 * @throws ClientProtocolException
-	 * @throws IOException
+	 * Returns Json string of all registred users.
 	 */
-	public static void logOut(String username) throws URISyntaxException, ClientProtocolException, IOException{
-		URI uri = new URIBuilder("http://chitchat.andrej.com/users")
-		          .addParameter("username", username)
-		          .build();
-
-		  String responseBody = Request.Delete(uri)
-		                               .execute()
-		                               .returnContent()
-		                               .asString();
-
-		  System.out.println(responseBody);
-	}
-	
-	/**
-	 * @throws URISyntaxException
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 */
-	public static String getUsers() throws URISyntaxException, ClientProtocolException, IOException{
-		URI uri =  new URIBuilder("http://chitchat.andrej.com/users")
-				.build();
-		String responseBody = Request.Get(uri)
-									 .execute()
-									 .returnContent()
-									 .asString();
-		return responseBody;
+	public static String getUsers(){
+		URI uri = null;
+		try {
+			uri = new URIBuilder("http://chitchat.andrej.com/users")
+                    .build();
+			String responseBody = Request.Get(uri)
+					.execute()
+					.returnContent()
+					.asString();
+			return responseBody;
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	return null;
 	}
 }

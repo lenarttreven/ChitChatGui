@@ -19,6 +19,10 @@ public class Uporabnik {
         this.lastActive = lastActive;
     }
 
+    public Uporabnik(String username){
+        new Uporabnik(username,new Date());
+    }
+
     @Override
     public String toString() {
         return "Uporabnik [username=" + username + ", lastActive=" + lastActive + "]";
