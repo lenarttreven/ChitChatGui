@@ -33,7 +33,12 @@ public class IzpisovalecSporocil extends TimerTask {
 				ArrayList<PrejetoSporocilo> sporocila = ServerChat.receiveMessages(chat.inputVzdevek.getText());
 				if (!sporocila.isEmpty()){
 					for(PrejetoSporocilo sporocilo: sporocila){
-						chat.addMessage(sporocilo.getSender(), sporocilo.getSender(), sporocilo.getText());
+						if (!sporocilo.getGlobal()){
+							chat.addMessage(sporocilo.getSender(), sporocilo.getSender(), sporocilo.getText());
+						}
+						else{
+							chat.addMessage(sporocilo.getSender(), "Skupinski pogovor", sporocilo.getText());
+						}
 					}
 				}
 				chat.output.setText(chat.sporocila.get(chat.napisTrenutnoOkno.getText()));

@@ -111,6 +111,20 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		uvodnaVrstica.add(odjavaGumb, odjavaConstraint);
 
 
+		JButton skupinskiPogovor = new JButton("Skupinski pogovor");
+		skupinskiPogovor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				novoOkno("Skupinski pogovor");
+			}
+		});
+
+		GridBagConstraints skupinskiPogovorConstraint = new GridBagConstraints();
+		skupinskiPogovorConstraint.gridx = 3;
+		skupinskiPogovorConstraint.weightx = 1.0;
+		skupinskiPogovorConstraint.gridy = 0;
+		uvodnaVrstica.add(skupinskiPogovor, skupinskiPogovorConstraint);
+
+
 		//Vsebina
 
 		GridBagConstraints vsebinaPogovoraConstraint = new GridBagConstraints();

@@ -15,6 +15,10 @@ import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * Razred, ki je zadolžen za komunikacijo s strežnikom.
+ */
 public class ServerChat {
 	static final Logger logger = LoggerFactory.getLogger(ServerChat.class);
 
@@ -42,15 +46,15 @@ public class ServerChat {
 					.asString();
 
 		} catch (URISyntaxException e) {
-			logger.error("URISyntaxException");
+			logger.info("URISyntaxException");
 		} catch (ClientProtocolException e1) {
-			logger.error("ClientProtocolException");
+			logger.info("ClientProtocolException");
 		} catch (IOException e1) {
-			logger.error("IOException");
+			logger.info("IOException");
 		}
-		System.out.println(responseBody);
+			logger.info(responseBody);
 	}
-	
+
 	/**
 	 * @param sender
 	 * @param content
@@ -72,21 +76,24 @@ public class ServerChat {
 					.execute()
 					.returnContent()
 					.asString();
-
+			logger.info(responseBody);
 		} catch (URISyntaxException e) {
-			logger.error("URISyntaxException");
+			logger.info("URISyntaxException");
 		} catch (ClientProtocolException e) {
-			logger.error("ClientProtocolException");
+			logger.info("ClientProtocolException");
 		} catch (IOException e) {
-			logger.error("IOException");
+			logger.info("IOException");
 		}
 
-		System.out.println(responseBody);
 
 	}
-	
+
 	/**
 	 * @param me
+	 * @return vrne seznam vseh prejetih Sporočil
+	 * @throws URISyntaxException
+	 * @throws ClientProtocolException
+	 * @throws IOException
 	 */
 	public static ArrayList<PrejetoSporocilo> receiveMessages(String me) throws URISyntaxException, ClientProtocolException, IOException{
 
@@ -102,7 +109,12 @@ public class ServerChat {
 
 	}
 
-    public static ArrayList<PrejetoSporocilo> vSeznamSporocil(String neurejenoSporocilo) throws IOException {
+	/**
+	 * @param neurejenoSporocilo
+	 * @return seznam PrejetihSporocil
+	 * @throws IOException
+	 */
+    private static ArrayList<PrejetoSporocilo> vSeznamSporocil(String neurejenoSporocilo) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(new ISO8601DateFormat());
 
@@ -125,15 +137,15 @@ public class ServerChat {
 					.execute()
 					.returnContent()
 					.asString();
-
-			System.out.println(responseBody);
+			logger.info(responseBody);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			logger.info("URISyntaxException");
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			logger.info("ClientProtocolException");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.info("IOException");
 		}
+
 	}
 	
 	/**
@@ -150,18 +162,18 @@ public class ServerChat {
 					.returnContent()
 					.asString();
 
-			System.out.println(responseBody);
+			logger.info(responseBody);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			logger.info("URISyntaxException");
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			logger.info("ClientProtocolException");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.info("IOException");
 		}
 	}
-	
+
 	/**
-	 * Returns Json string of all registred users.
+	 * @return vrne seznam vseh prijavljenih uporabnikov
 	 */
 	public static ArrayList<Uporabnik> getUsers(){
 		URI uri = null;
@@ -174,16 +186,22 @@ public class ServerChat {
 					.asString();
 			return vSeznamUporabnikov(responseBody);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			logger.info("URISyntaxException");
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			logger.info("ClientProtocolException");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.info("IOException");
 		}
 	return null;
 	}
 
-	public static ArrayList<Uporabnik> vSeznamUporabnikov(String uporabniki) throws IOException {
+
+	/**
+	 * @param uporabniki
+	 * @return seznam Uporabnikov
+	 * @throws IOException
+	 */
+	private static ArrayList<Uporabnik> vSeznamUporabnikov(String uporabniki) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setDateFormat(new ISO8601DateFormat());
 
