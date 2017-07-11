@@ -1,5 +1,8 @@
 package si.treven.chitchat_client;
 
+/**
+ * Razred, ki požene program
+ */
 public class ChitChatMain {
 
 	public static void main(String[] args) {

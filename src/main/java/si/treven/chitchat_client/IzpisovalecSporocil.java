@@ -11,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.security.util.Length;
 
+/**
+ * Razred, ki skrbi, da se Chat odjemalec osvežuje vsako sekundo
+ */
 public class IzpisovalecSporocil extends TimerTask {
 	final Logger logger = LoggerFactory.getLogger(IzpisovalecSporocil.class);
 	
@@ -21,7 +24,8 @@ public class IzpisovalecSporocil extends TimerTask {
 	public IzpisovalecSporocil(ChitChatGui chat){
 		this.chat = chat;
 	}
-	
+
+
 	public void activate() {
 		timer = new Timer();
 		timer.scheduleAtFixedRate(this, 1000, 1000);
@@ -42,21 +46,18 @@ public class IzpisovalecSporocil extends TimerTask {
 					}
 				}
 				chat.output.setText(chat.sporocila.get(chat.napisTrenutnoOkno.getText()));
+
+				ArrayList<Uporabnik> seznamUporabnikov = ServerChat.getUsers();
+				chat.newUsers();
+				for(Uporabnik uporabnik: seznamUporabnikov) {
+					chat.addUser(uporabnik.getUsername());
+				}
 		} catch (ClientProtocolException e) {
-			logger.error("Uporabnik {} ne more prejeti sporočil, ClientProtocolException", chat.inputVzdevek.getText());
+			logger.info("ClientProtocolException");
 		} catch (IOException e) {
-			logger.error("Uporabnik {} ne more prejeti sporočil, IOException", chat.inputVzdevek.getText());
+			logger.info("IOException");
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			logger.info("URISyntaxException");
 		}
-
-		ArrayList<Uporabnik> seznamUporabnikov = ServerChat.getUsers();
-		chat.newUsers();
-		for(Uporabnik uporabnik: seznamUporabnikov) {
-			chat.addUser(uporabnik.getUsername());
-		}
-
 	}
-
-
 }
