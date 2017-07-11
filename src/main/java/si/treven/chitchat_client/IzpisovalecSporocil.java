@@ -47,17 +47,19 @@ public class IzpisovalecSporocil extends TimerTask {
 				}
 				chat.output.setText(chat.sporocila.get(chat.napisTrenutnoOkno.getText()));
 
-				ArrayList<Uporabnik> seznamUporabnikov = ServerChat.getUsers();
-				chat.newUsers();
-				for(Uporabnik uporabnik: seznamUporabnikov) {
-					chat.addUser(uporabnik.getUsername());
-				}
+
 		} catch (ClientProtocolException e) {
 			logger.info("ClientProtocolException");
 		} catch (IOException e) {
 			logger.info("IOException");
 		} catch (URISyntaxException e) {
 			logger.info("URISyntaxException");
+		}
+
+		ArrayList<Uporabnik> seznamUporabnikov = ServerChat.getUsers();
+		chat.newUsers();
+		for(Uporabnik uporabnik: seznamUporabnikov) {
+			chat.addUser(uporabnik.getUsername());
 		}
 	}
 }
