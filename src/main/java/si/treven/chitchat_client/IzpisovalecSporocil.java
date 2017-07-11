@@ -33,9 +33,10 @@ public class IzpisovalecSporocil extends TimerTask {
 				ArrayList<PrejetoSporocilo> sporocila = ServerChat.receiveMessages(chat.inputVzdevek.getText());
 				if (!sporocila.isEmpty()){
 					for(PrejetoSporocilo sporocilo: sporocila){
-						chat.addMessage(sporocilo.getSender(), sporocilo.getText());
+						chat.addMessage(sporocilo.getSender(), sporocilo.getSender(), sporocilo.getText());
 					}
 				}
+				chat.output.setText(chat.sporocila.get(chat.napisTrenutnoOkno.getText()));
 		} catch (ClientProtocolException e) {
 			logger.error("Uporabnik {} ne more prejeti sporočil, ClientProtocolException", chat.inputVzdevek.getText());
 		} catch (IOException e) {

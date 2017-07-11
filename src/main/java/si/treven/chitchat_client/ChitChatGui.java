@@ -34,7 +34,7 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextArea output;
+	public JTextArea output;
 	public JTextField input;
 	public JTextField inputVzdevek;
 	public JTextField inputPrejemnik;
@@ -86,7 +86,7 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		prijavaGumb.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				ServerChat.logIn(inputVzdevek.getText());
-				addMessage("ChatServer", "Prijavil si se!");
+				addMessage("ChatServer", napisTrenutnoOkno.getText(),  "Prijavil si se!");
 			}
 		});
 
@@ -100,7 +100,7 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		odjavaGumb.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				ServerChat.logOut(inputVzdevek.getText());
-				addMessage("ChatServer", "Odjavil si se!");
+				addMessage("ChatServer", napisTrenutnoOkno.getText(),"Odjavil si se!");
 			}
 		});
 
@@ -130,7 +130,7 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		TrenutnoOkno.setLayout(new FlowLayout(FlowLayout.LEFT));
 		TrenutnoOkno.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
-		napisTrenutnoOkno = new JLabel("Skupinski pogovor ");
+		napisTrenutnoOkno = new JLabel("Skupinski pogovor");
 		TrenutnoOkno.add(napisTrenutnoOkno);
 
 		GridBagConstraints TrenutnoOknoConstraint = new GridBagConstraints();
@@ -239,6 +239,9 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 		prejemnikConstraint.gridy = 2;
 		aktivniUporabniki.add(prejemnik, prejemnikConstraint);
 
+		sporocila = new HashMap<String, String>();
+		sporocila.put("Skupinski pogovor", "");
+
 
 		addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e){
@@ -249,12 +252,12 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 	}
 
 	/**
-	 * @param person - the person sending the message
-	 * @param message - the message content
+	 * @param posiljatelj - the person sending the message
+	 * @param sporocilo - the message content
 	 */
-	public void addMessage(String person, String message) {
-		String chat = this.output.getText();
-		this.output.setText(chat + person + ": " + message + "\n");
+	public void addMessage(String posiljatelj, String prejemnik, String sporocilo) {
+		this.sporocila.put(prejemnik, this.sporocila.get(prejemnik)
+				+ posiljatelj + ": " + sporocilo + "\n");
 	}
 
 	public void addUser(String uporabnik){
@@ -273,12 +276,12 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 	public void keyTyped(KeyEvent e) {
 		if (e.getSource() == this.input) {
 			if (e.getKeyChar() == '\n') {
-				if (this.napisTrenutnoOkno.getText() == "Skupinski pogovor ") {
-					this.addMessage(inputVzdevek.getText(), input.getText());
+				if (this.napisTrenutnoOkno.getText() == "Skupinski pogovor") {
+					this.addMessage(inputVzdevek.getText(), napisTrenutnoOkno.getText(), input.getText());
 					ServerChat.sendGlobalMessage(inputVzdevek.getText(), input.getText());
 					this.input.setText("");
 				} else {
-					this.addMessage(inputVzdevek.getText(), input.getText());
+					this.addMessage(inputVzdevek.getText(), napisTrenutnoOkno.getText() , input.getText());
 					ServerChat.sendPrivateMessage(inputVzdevek.getText(), napisTrenutnoOkno.getText(), input.getText());
 					this.input.setText("");
 				}
@@ -296,6 +299,9 @@ public class ChitChatGui extends JFrame implements ActionListener, KeyListener {
 
 	private void novoOkno(String text) {
 		this.napisTrenutnoOkno.setText(text);
+		if (!this.sporocila.containsKey(text)) {
+			this.sporocila.put(text, "");
+		}
 	}
 
 
